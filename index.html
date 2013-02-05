@@ -26,6 +26,20 @@ Minimum Viable Metrics dashboard template - ufert.se
 <script src="nvd3-master/src/models/pie.js"></script>
 <script src="nvd3-master/src/models/pieChart.js"></script>
 <script>
+	/*
+
+	This template file is built with d3.js and nvd3, the re-usable d3 charts library
+	All data is randomly generated using the generateData() function.
+	Charts expect a list of objects, each of which is formatted as:
+	object["key"] - String. The name of the graph item
+	object["values"] - List. A list of data points (in list format).
+		object["values"][i][0] - Date. The date of the data point.
+		object["values"][i][1] - Float or Int. The value of the data point.
+	object["area"] - Boolean (optional). For line charts; specifies whether the line chart is an area chart or not.
+	object["disabled"] - Boolean (optional). Specifies whether this graph is disabled (invisible) by default.	
+	object["color"] - String (hex value). The color of the graph.
+
+	*/
 
 	function getRandomInt (min, max) {
 	    return Math.floor(Math.random() * (max - min + 1)) + min;
