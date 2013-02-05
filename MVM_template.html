@@ -37,7 +37,22 @@ Minimum Viable Metrics dashboard template - ufert.se
 		date.setDate(date.getDate() - 1);
 
 		return date;
-	} 
+	}
+
+	function adjust(data) {
+		//adjust values for retention
+		for (k = 1; k < data.length; k++) {
+			var retentionDay = parseInt(data[k]["key"].replace("D",""));
+			for (j = 0; j < data[k]["values"].length; j++) {
+				if (retentionDay > data[k]["values"].length || (data[k]["values"].length - j < retentionDay)) {
+					data[k]["values"][j][1] = 0;
+				} else {
+					data[k]["values"][j][1] = data[k]["values"][j][1] * (1/ (k * 1.1));
+				}
+			}
+		}
+		return data;
+	}
 
 	function generateData(numDays, endDay, keys, min, max) {
 		var data = [];
@@ -174,11 +189,20 @@ Minimum Viable Metrics dashboard template - ufert.se
 	//retention
 	nv.addGraph(function() {  
 	
-		data = generateData(15, getYesterday(), [{"name":"D1","color":"#FF9B73", "area":false},{"name":"D3","color":"#FF4900"},{"name":"D7","color":"#A62F00"},
-													{"name":"D14","disabled":true,"color":"#A62F00"},{"name":"D28","disabled":true,"color":"#A62F00"},
-													{"name":"D90","disabled":true,"color":"#A62F00"},{"name":"D365","disabled":true,"color":"#A62F00"}
-												], 10, 50);
-	
+		data = adjust(generateData(15, getYesterday(), [
+					{"name":"D1","color":"#FF9B73", "area":false},
+					{"name":"D2","color":"#88FF00", "area":false, "disabled":true},
+					{"name":"D3","color":"#FF4900"},
+					{"name":"D4","color":"#FFCC00", "disabled":true},
+					{"name":"D5","color":"#5447FF", "disabled":true},
+					{"name":"D6","color":"#09008A", "disabled":true},
+					{"name":"D7","color":"#A62F00"},
+					{"name":"D14","disabled":true,"color":"#A62F00"},{"name":"D28","disabled":true,"color":"#A62F00"},
+					{"name":"D90","disabled":true,"color":"#A62F00"},{"name":"D365","disabled":true,"color":"#A62F00"}
+				], 50, 60));
+
+		console.log(data);
+
 		var chart = nv.models.lineChart()
 			.x(function(d) { return d[0] })
 	        .y(function(d) { return d[1] / 100 })
@@ -347,7 +371,6 @@ Minimum Viable Metrics dashboard template - ufert.se
 		
 		data = generateData(15, getYesterday(), [{"name":"Average Session Length","color":"#BF5930", "area":true}, 	
 													{"name":"Median Session Length","color":"#218359","disabled":"true", "area":true}], 30, 50);
-	
 	
 		var chart = nv.models.lineChart()
 			.x(function(d) { return d[0] })
